@@ -68,7 +68,8 @@ class TipViewController: UIViewController {
             billField.text = bill!
             calculateTip(billField)
         }
-        
+        // Make sure we are focusing the textfield when this gets created
+        billField.becomeFirstResponder()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -82,7 +83,8 @@ class TipViewController: UIViewController {
     }
 
     @IBAction func onTap(_ sender: Any) {
-        view.endEditing(true)
+        // Commenting this out since we don't want to keyboard to be dismissed
+        //view.endEditing(true)
     }
 
     @IBAction func calculateTip(_ sender: Any) {
