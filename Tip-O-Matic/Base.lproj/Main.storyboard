@@ -87,15 +87,10 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Tip-O-Matic" id="dJr-Sz-KFn">
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="zv6-Ob-8se">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ey4-QW-coa">
-                                <rect key="frame" x="276" y="7" width="83" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Settings"/>
-                                <connections>
-                                    <segue destination="eLx-sh-KOD" kind="push" id="vxc-6k-jGJ"/>
-                                </connections>
-                            </button>
+                        <barButtonItem key="rightBarButtonItem" image="settings" style="plain" id="zv6-Ob-8se">
+                            <connections>
+                                <segue destination="eLx-sh-KOD" kind="push" id="iFd-NF-Ezc"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -196,6 +191,9 @@
             <point key="canvasLocation" x="-49.5" y="154.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="settings" width="25" height="25"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

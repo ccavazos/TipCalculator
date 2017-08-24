@@ -50,6 +50,9 @@ Question 2: "Swift uses [Automatic Reference Counting](https://developer.apple.c
 
 **Answer:** A strong reference cycle within a closure happens when you use the `self` within a class without defining a capture list or a weak or unowned reference. This creates a strong reference between the class and the closure itself than even if the instance of the classes is released (set to null) the two-way strong relationship between the class and the closure will not allow it to be freed from memory.
 
+## Notes
+
+Icons from [Icons8/](https://icons8.com/)
 
 ## License
 
