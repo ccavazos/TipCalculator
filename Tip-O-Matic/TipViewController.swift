@@ -19,7 +19,7 @@ class TipViewController: UIViewController {
  
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("Load defaults if any")
+        print("viewWillAppear")
         
         // Change the alpha of the control
         self.tipControl.alpha = 0
@@ -29,12 +29,24 @@ class TipViewController: UIViewController {
         let firstTabValue = defaults.double(forKey: "firstStepper") 
         let secondTabValue = defaults.double(forKey: "secondStepper")
         let thirdTabValue = defaults.double(forKey: "thirdStepper")
-        tipPercentages = [firstTabValue, secondTabValue, thirdTabValue]
+        
+        // Lets add some default values if non are created (first time the app launches
+        if firstTabValue == 0 && secondTabValue == 0 && thirdTabValue == 0 {
+            tipPercentages = [15, 20, 25]
+            // Save those values
+            let defaults = UserDefaults.standard
+            defaults.set(tipPercentages[0], forKey: "firstStepper")
+            defaults.set(tipPercentages[1], forKey: "secondStepper")
+            defaults.set(tipPercentages[2], forKey: "thirdStepper")
+            defaults.synchronize()
+        } else {
+            tipPercentages = [firstTabValue, secondTabValue, thirdTabValue]
+        }
         
         // Set the segmented control to the current values
-        tipControl.setTitle(String(format: "%.0f%%", firstTabValue), forSegmentAt: 0)
-        tipControl.setTitle(String(format: "%.0f%%", secondTabValue), forSegmentAt: 1)
-        tipControl.setTitle(String(format: "%.0f%%", thirdTabValue), forSegmentAt: 2)
+        tipControl.setTitle(String(format: "%.0f%%", tipPercentages[0]), forSegmentAt: 0)
+        tipControl.setTitle(String(format: "%.0f%%", tipPercentages[1]), forSegmentAt: 1)
+        tipControl.setTitle(String(format: "%.0f%%", tipPercentages[2]), forSegmentAt: 2)
         
         // Lets reset the fields so we don't show data if the user changes the settings
         billField.text = ""
@@ -47,9 +59,21 @@ class TipViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let defaults = UserDefaults.standard
+        let bill = defaults.string(forKey: "billAmount")
+        if bill != nil {
+            // If a previous bill exists, lets prepopulate it and calculate the tip
+            billField.text = bill!
+            calculateTip(billField)
+        }
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("viewWillDisappear")
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,11 +88,16 @@ class TipViewController: UIViewController {
     @IBAction func calculateTip(_ sender: Any) {
         
         let bill = Double(billField.text!) ?? 0
-        let tip = bill * tipPercentages[tipControl.selectedSegmentIndex]
+        let tip = bill * tipPercentages[tipControl.selectedSegmentIndex] / 100
         let total = bill + tip
         
         tipLabel.text = String(format: "$%.2f", tip)
         totalLabel.text = String(format: "$%.2f", total)
+        
+        // Save the input 
+        let defaults = UserDefaults.standard
+        defaults.set(billField.text!, forKey: "billAmount")
+        defaults.synchronize()
     }
 }
 

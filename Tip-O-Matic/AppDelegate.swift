@@ -15,7 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        print("didFinishLaunchingWithOptions")
         // Override point for customization after application launch.
+        attemptClearCache()
         return true
     }
 
@@ -25,12 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        print("applicationDidEnterBackground")
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        saveCache()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        print("applicationWillEnterForeground")
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        attemptClearCache()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -39,8 +45,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        saveCache()
     }
 
-
+    func attemptClearCache() {
+        print("attemptClearCache")
+        let defaults = UserDefaults.standard
+        let appInBackgroundDate = defaults.object(forKey: "appInBackground")
+        if appInBackgroundDate != nil {
+            print("App has been in background")
+            let timeInBackground = Date().timeIntervalSince(appInBackgroundDate as! Date)
+            // Time interval is represented by seconds, lets compare it to 10 minutes (600 seconds)
+            print("Time in background \(timeInBackground)")
+            if (timeInBackground > 600) {
+                print("Clearing the bill cache")
+                defaults.removeObject(forKey: "billAmount")
+                defaults.synchronize()
+            }
+        }
+    }
+    
+    func saveCache() {
+        // Save the input
+        let defaults = UserDefaults.standard
+        let currentDate = Date()
+        defaults.set(currentDate, forKey: "appInBackground")
+        defaults.synchronize()
+    }
 }
 
